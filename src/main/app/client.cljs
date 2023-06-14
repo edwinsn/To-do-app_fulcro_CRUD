@@ -3,7 +3,7 @@
     [com.fulcrologic.fulcro.application :as app]
     [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
     [com.fulcrologic.fulcro.dom :as dom]
-    ;[app.tasks_list :refer [ui-tasks-list]]
+    [app.routes.tasks-list :refer [ui-tasks-list]]
     ))
 
 (defonce app (app/fulcro-app))
@@ -11,7 +11,8 @@
 (defsc Root [this props]
        (dom/div
          (dom/h1 "Here you have a list of your tasks:")
-         ;(ui-task-list)
+         (ui-tasks-list)
+         (dom/p "No more tasks")
          )
        )
 
