@@ -1,0 +1,18 @@
+{
+  "name": "to-do-app_fulcro_crud",
+  "version": "1.0.0",
+  "description": "A to do app whith the 4 CRUD basic operations.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx shadow-cljs server",
+    "dev": "npx shadow-cljs watch main"
+  },
+  "author": "edwinsn",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "shadow-cljs": "^2.23.3"
+  }
+}
