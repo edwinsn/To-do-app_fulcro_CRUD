@@ -8,10 +8,12 @@
 
 (defonce app (app/fulcro-app))
 
-(defsc Root [this props]
+(defsc Root [this {:keys [tasks]}]
        (dom/div
-         (dom/h1 "Here you have a list of your tasks:")
-         (ui-tasks-list)
+         (print tasks)
+         (dom/h1 "Steps to success")
+         (ui-tasks-list {:list/tasks [{:task/id 1 :task/title "Task 1" :key "1"}
+                                      {:task/id 2 :task/title "Task 2" :key "2"}]})
          (dom/p "No more tasks")
          )
        )

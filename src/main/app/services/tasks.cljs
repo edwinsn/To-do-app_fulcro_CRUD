@@ -1,5 +1,4 @@
-;why cant i put this file in a subfolder
-(ns app.services
+(ns app.services.tasks
   (:require
     [com.fulcrologic.fulcro.application :as app]
     [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
@@ -27,4 +26,31 @@
                         ])
 ;js/fetch "/api/tasks"
 
+;get the tasks
 (defn load-tasks [] (print (get-the-tasks)) (get-the-tasks))
+
+;delete a task
+(defn delete-task [ev id]
+      (.preventDefault ev)
+      (print (str "Deleting: " id))
+      )
+
+;update a task handler
+(def input-value (atom ""))
+
+(defn onInputChange [event]
+      (let [value (-> event .-target .-value)]
+           (println "Input value changed:" value)
+           (reset! input-value value)))
+
+(defn update-task [event id]
+      (.preventDefault event)
+      ;; retrieve the value from the application database
+      (let [value @input-value]
+           (println "Updating task" id "with value" value)))
+
+;mark a task as completed or uncompleted
+(defn change-task-completion [ev id completed]
+      (.preventDefault ev)
+      (print (str "Changing task" id " with " completed))
+      )

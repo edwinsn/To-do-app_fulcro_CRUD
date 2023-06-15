@@ -5,21 +5,38 @@
 
 
 
-(defsc Task [this {:task/keys [title id completed?]}]
+(defsc Task [this {:task/keys [title id completed? beingEdited? ]}  {:keys [onDelete onNameUpdate onCompletionChange ]}]
 
-       {:query         [:task/id :task/title :task/completed?]
+       {:query         [:task/id :task/title :task/completed? :task/beingEdited?]
         :ident         (fn [] [:task/id id])
-        :initial-state (fn [{:keys [id title]}]
+        :initial-state (fn [{:keys [id title beingEdited?]}]
                            {:task/id        id
                             :task/title     title
-                            :task/completed? false})}
+                            :task/completed? false
+                            :beingEdited? false
+                            })}
        (dom/li
-         (dom/input {:type     "checkbox"
-                     :checked  completed?
-                     :onChange #(comp/transact! this `[(toggle-completed! {:id ~id} )])})
-         (dom/span (if completed? [:s title] title))
-         (dom/button "Update")
-         (dom/button "Delete")
+         (dom/form
+           {:onSubmit #(onNameUpdate % id)}
+           ;task status
+           (dom/input {:type     "checkbox"
+                       :checked  completed?
+                       :onChange #(comp/transact! this `[(toggle-completed! {:id ~id} )])})
+           ;task title
+           (if beingEdited?
+             (dom/input {:type "text" :defaultValue title})
+             (dom/span (if completed? [:s title] title))
+             )
+           ;update task
+           (dom/button {
+                        :type "submit"
+                        }
+                       (if beingEdited? "Save" "Update"))
+           ;delete task
+           (dom/button {:onClick #(onDelete % id)} "Delete")
+
+           )
+
          ))
 
 

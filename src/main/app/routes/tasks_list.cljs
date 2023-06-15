@@ -2,24 +2,22 @@
   (:require
     [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
     [com.fulcrologic.fulcro.dom :as dom]
-    ;[app.services :refer [load-tasks]]
-    [app.components.task :refer [ui-task]]
+    [app.services.tasks :refer [load-tasks delete-task update-task change-task-completion]]
+    [app.components.task :refer [ui-task Task]]
     [app.components.new-task :refer [ui-new-task]]
     ))
 
-
-(defsc TasksList [this {:tasks-list/keys [tasks]}]
+(defsc TasksList [this {:keys [list/tasks]}]
        {:initial-state (fn [_]
-                           (println "TasksList :initial-state called")
-                           {:tasks-list/tasks [{:id 1 :title "Task 1"}
-                                               {:id 2 :title "Task 2"}]})}
+                           {:list/tasks [(comp/get-initial-state Task {:id 1 :title "Third Task"})
+                                         (comp/get-initial-state Task {:id 2 :title "Second task"})]})}
        (dom/ul
-         (print "Tasks" tasks)
-         (mapv ui-task [{:task/id 1 :task/title "Task 12" :key "1"}
-                        {:task/id 2 :task/title "Task 2" :key "2"}])
-         (ui-new-task)
-         )
-       )
-
+         ;why don't I use list/tasks????
+         (mapv (fn [p] (ui-task (comp/computed p {
+                                               :onDelete delete-task
+                                               :onNameUpdate update-task
+                                               :onCompletionChange change-task-completion
+                                               }))) tasks)
+         (ui-new-task)))
 
 (def ui-tasks-list (comp/factory TasksList))
