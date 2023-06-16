@@ -5,7 +5,7 @@
 
 
 
-(defsc Task [this {:task/keys [title id completed? beingEdited? ]}  {:keys [onDelete onNameUpdate onCompletionChange ]}]
+(defsc Task [this {:task/keys [title id completed? beingEdited? ]}  {:keys [onDelete onNameUpdate onStartUpdating onCompletionChange ]}]
 
        {:query         [:task/id :task/title :task/completed? :task/beingEdited?]
         :ident         (fn [] [:task/id id])
@@ -18,18 +18,23 @@
        (dom/li
          (dom/form
            {:onSubmit #(onNameUpdate % id)}
+
            ;task status
            (dom/input {:type     "checkbox"
                        :checked  completed?
-                       :onChange #(comp/transact! this `[(toggle-completed! {:id ~id} )])})
+                       :onChange onCompletionChange
+                       })
+
            ;task title
            (if beingEdited?
              (dom/input {:type "text" :defaultValue title})
              (dom/span (if completed? [:s title] title))
              )
+
            ;update task
            (dom/button {
                         :type "submit"
+                        :onClick beingEdited? onNameUpdate onStartUpdating
                         }
                        (if beingEdited? "Save" "Update"))
            ;delete task
@@ -40,4 +45,4 @@
          ))
 
 
-(def ui-task (comp/factory Task))
+(def ui-task (comp/factory Task {:keyfn :task/id}))

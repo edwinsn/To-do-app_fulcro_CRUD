@@ -5,7 +5,7 @@
 
 (defsc NewTask [this props]
        {}
-       (dom/div
+       (dom/li
          (dom/i "+")
          (dom/input {:placeholder "New task" })
          ))

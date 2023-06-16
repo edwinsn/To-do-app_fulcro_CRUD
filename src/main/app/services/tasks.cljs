@@ -4,6 +4,7 @@
     [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
     [com.fulcrologic.fulcro.dom :as dom]
     [com.fulcrologic.fulcro.mutations :refer [defmutation]]
+    [app.mutations.tasks :as api]
     ))
 
 ;;The mutation to get the tasks from backend and update the state
@@ -30,9 +31,11 @@
 (defn load-tasks [] (print (get-the-tasks)) (get-the-tasks))
 
 ;delete a task
-(defn delete-task [ev id]
+(defn delete-task [ev id tasks-list]
       (.preventDefault ev)
       (print (str "Deleting: " id))
+      (def this "Where should i go???")
+      (comp/transact! this [(api/delete-task {:tasks-list tasks-list :task-id id  })])
       )
 
 ;update a task handler

@@ -7,17 +7,25 @@
     [app.components.new-task :refer [ui-new-task]]
     ))
 
-(defsc TasksList [this {:keys [list/tasks]}]
-       {:initial-state (fn [_]
-                           {:list/tasks [(comp/get-initial-state Task {:id 1 :title "Third Task"})
+(defsc TasksList [this {:list/keys [title tasks]}]
+       {
+        :query [ :list/title {:list/tasks (comp/get-query Task)}]
+        :initial-state (fn [{:keys [title]}]
+                           {
+                            :list/title title
+                            :list/tasks [(comp/get-initial-state Task {:id 1 :title "Third Task"})
                                          (comp/get-initial-state Task {:id 2 :title "Second task"})]})}
-       (dom/ul
-         ;why don't I use list/tasks????
-         (mapv (fn [p] (ui-task (comp/computed p {
+       (dom/div
+         (dom/h1 title)
+         (dom/ul
+
+           (mapv (fn [p] (ui-task (comp/computed p {
                                                :onDelete delete-task
                                                :onNameUpdate update-task
                                                :onCompletionChange change-task-completion
                                                }))) tasks)
-         (ui-new-task)))
+           (ui-new-task)
+           ))
+       )
 
 (def ui-tasks-list (comp/factory TasksList))
